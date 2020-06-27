@@ -1,0 +1,6 @@
+<view class="container">
+  <text>about</text>
+   <button bindtap='toIndex'>首页</button>
+</view>
+<import src="tpl.wxml" />
+<template is="tplData" data="{{...tplData}}" />

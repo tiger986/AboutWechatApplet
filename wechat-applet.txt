@@ -1,0 +1,190 @@
+一、关于小程序：
+   1. 小程序优点：入口浅、体积小、体验好，用完即走
+   2. 小程序的适用场景：刚需低频的应用（随着其发展现在很多高频刚需的应用也开始用小程序）
+
+二、开发工具相关：
+   1. 注册小程序账号: mp.weixin.qq.com --> 小程序 --> 注册登录 --> 填写小程序信息 --> 下载微信web开发者工具
+   2. 打开微信web开发工具(选小程序入口) --> 创建(添加)项目  (AppID的获取：登录mp.weixin.qq.com，在小程序首页选设置，有个账号信息里有个AppID(小程序ID)
+
+三、项目目录结构：
+   1. pages文件夹：存放页面目录(一般有多少个页面就应该有多少个页面文件夹)，页面目录里存放本页面相关文件（index.js、indx.json、index.wxml、index.wxss）
+      注意：a. pages文件夹的名称可以自定义，一般都用pages命名
+           b. pages文件夹里的页面文件夹是自定义命名
+           c. 页面文件夹里的页面相关文件是自定义命名，但本文件夹中所有文件名必须相同，只是扩展名不同         
+   2. utils文件夹：
+   3. app.js：此文件名不可改，存放小程序全局逻辑
+   4. app.json：此文件名不可改，存放小程序全局配置
+   5. app.wxss：此文件名不可改，存放小程序全局样式
+   6. project.config.json：此文件名不可改
+
+四、开发相关：
+   1. 创建页面目录及页面相关文件
+   2. 全局配置(在app.json中)：最外层为{}
+      a. "pages": []：页面路径列表(必须配置)，将所有页面的路径写在此数组中，如“pages/index/index”
+         注意：页面路径里是没有具体文件的，即没有扩展名。数组中放在第一个的页面就是打开该小程序显示的第一个页面
+              如果数组中的路径没有提前创建，那么编译后将会自动根据配置的路径被一一创建
+      b. "window": {}：全局的默认窗口表现
+                       (1)"navigationBarTitleText": "abc"  就是相当于配置页面默认title，如果在页面目录里的.json文件中对该页面
+                       的"navigationBarTitleText"进行了局部配置，那么其会覆盖全局配置里的"navigationBarTitleText"
+                       (2)"navigationBarBackgroundColor": "#000000" 配置导航栏背景颜色
+                       (3)"navigationBarTextStyle": "white"  配置导航栏标题颜色，仅支持 black / white
+                       (4)"backgroundColor": "#ccc"  配置窗口(页面body)的背景色,会被页面的样式覆盖
+                       (5)"enablePullDownRefresh": true 配置是否开启全局的下拉刷新
+      c. "tabBar":{}：配置底部 tab 栏的表现:
+                      (1)"list": {} 配置tab的列表(最少2个,最多5个)
+                                 (a)"pagePath": "pages/logs/logs",  页面路径(必须配置)，必须在 pages 中先定义
+                                 (b)"text": "日志",  tab 上按钮文字(必须配置)
+                                 (c)"iconPath": "res/icon/5.png",   图片路径,icon大小限制为40kb，建议尺寸为81px * 81px，不支持网络图片。当position为top时，不显示icon。
+                                 (d)"selectedIconPath": "res/icon/2.png"   选中时的图片路径，icon大小限制为40kb，建议尺寸为81px * 81px，不支持网络图片。当position为top时，不显示icon。
+                      (2)"color": "#333333",  tab上的文字默认颜色，仅支持十六进制颜色
+                      (3)"selectedColor": "#ffffff",   tab上的文字选中时的颜色，仅支持十六进制颜色
+                      (4)"backgroundColor": "#6435c9",  tab的背景色，仅支持十六进制颜色
+                      (5)"borderStyle": "white",   tabbar上边框的颜色， 仅支持black / white
+                      (6)"position": "bottom"  tabBar的位置，仅支持bottom / top
+      d. 其他配置及详细信息见官方文档
+   3. 页面配置(在页面.json中)：最外层为{},页面中配置项在当前页面会覆盖 app.json 的 window 中相同的配置项
+      a. "navigationBarBackgroundColor": "#ffffff"  配置本页面下导航栏背景颜色
+      b. "navigationBarTextStyle": "black"    配置本页面下导航栏标题颜色，仅支持 black / white
+      c. "navigationBarTitleText": "微信接口功能演示"   配置本页面下导航栏标题文字内容
+      d. "backgroundColor": "#eeeeee"   配置本页面下窗口的背景色
+      e. "backgroundTextStyle": "light"   配置本页面下下拉 loading 的样式，仅支持 dark / light
+      f. "enablePullDownRefresh": true   是否开启当前页面下拉刷新
+   4. 注册小程序(在app.js中)：App({}),固定写法，接受一个Object参数，其指定小程序的生命周期回调等。App({})必须在 app.js中调用(必填)，必须调用且只能调用一次。不然会出现无法预期的后果
+      a. onLaunch (options) {Do something}  小程序初始化完成时触发，全局只触发一次(生命周期回调)(可以通过options参数可以拿到一些信息,如路径、场景值等)
+         注：ptions参数中的path是指小程序初始化后的首页面的路径，scene(场景值)是记录小程序是通过什么方式打开的(如：微信发现、扫描二维码等)
+      b. onShow (options) {Do something}  小程序启动，或从后台进入前台显示时触发(生命周期回调)(可以通过options参数可以拿到一些信息如路径、场景值等)
+         注：ptions参数中的path是指小程序初始化后的首页面的路径或者是从后台进入前台显示的页面的路径
+            前后台切换是指当你打开小程序后由于要接听电话、视频等原因，小程序会有前台切到后台，等你中断电话、视频等回到小程序，小程序就会由后台切到前台
+      c. onHide () {Do something}  小程序从前台进入后台时触发(生命周期回调)
+      d. onError(mes) {console.log(msg)}  小程序发生脚本错误或API调用报错时触发(监听函数)
+      e. onPageNotFound(res){wx.redirectTo({url: 'pages/...'})}  小程序要打开的页面不存在时触发(监听函数)
+      f. 自定义全局属性，如：globalData: "aaa"  (在此js中可以访问:this.globalData，在页面js中也可以访问:const app=getApp(); app.globalData)
+      g. 自定义全局方法，如：globalFun(){}  (在此js中可以调用:this.globalFun()，在页面js中也可以访问:const app=getApp(); app.globalFun())
+      h. 其他内容见官方文档
+   5. 注册页面(在页面.js中)：Page({}),固定写法,接受一个Object类型参数(必填)，其指定页面的初始数据、生命周期回调、事件处理函数等。
+      a. data: {}：页面的初始数据,如data: {title: 'abc'}
+         (1)访问：this.data.title,在页面中显示则在wxml中用插值表达式访问
+         (2)修改：this.setData({title: 'eee'})
+      b. onLoad: function(options) {Do something}  页面加载时触发(生命周期回调)
+      c. onShow: function() {Do something}   页面显示时触发(生命周期回调)
+      d. onReady: function() {Do something}   页面初次渲染完成时触发(生命周期回调)
+      e. onHide: function() {Do something}   页面隐藏时触发(生命周期回调)
+      f. onUnload: function() {Do something}   页面卸载时触发(生命周期回调)
+      g. onPullDownRefresh: function() {Do something}   用户下拉时触发
+      h. onReachBottom: function() {Do something}   页面上拉触底时触发
+      i. onShareAppMessage: function() {Do something}   用户点击右上角转发时触发
+      j. onPageScroll: function() {Do something}   页面滚动时触发
+      k. onResize: function() {Do something}   页面尺寸改变时触发
+      l. onTabItemTap: function(item) {Do something}   当前是tab页时，点击相应tab时触发（可以通过item参数获取到此页面的一些信息）
+      m. 自定义页面属性，如：person：{name: 'gao'} (在此js中可以访问:this.person.name,也可以修改:this.person.name='chen',但不能再wxml中用插值表达式问)
+      g. 自定义页面方法，如：clickFun(){}  (在此js中可以调用:this.globalFun(),也可以在wxml中的元素上绑定)
+      h. 其他内容见官方文档
+   6. 路由方法(切换页面)：
+      a. wx.switchTab({})   跳转到tabBar页面，并关闭其他所有非tabBar页面（此方法只能切换tabBar页面）
+         (1)url: String：必填，需要跳转的tabBar页面的路径 (代码包路径)（需在 app.json 的 tabBar 字段定义的页面），路径后不能带参数。
+            注：可以使绝对路径，如'/pages/index/index'(index.wxml文件的路径,路径最后没有扩展名)；也可以是相对路径，如'../index/index'
+         (2)success: Function：接口调用成功的回调函数
+         (3)fail: Function：接口调用失败的回调函数
+         (4)complete: Function：接口调用结束的回调函数（调用成功、失败都会执行）
+      b. wx.redirectTo({})  关闭当前页面，跳转到应用内的某个页面。但是不允许跳转到tabbar页面
+         (1)url: String：必填，需要跳转的应用内非 tabBar 的页面的路径 (代码包路径), 路径后可以带参数。
+            注：参数与路径之间使用 ? 分隔，参数键与参数值用 = 相连，不同参数用 & 分隔。
+         (2)success: Function：接口调用成功的回调函数
+         (3)fail: Function：接口调用失败的回调函数
+         (4)complete: Function：接口调用结束的回调函数（调用成功、失败都会执行）
+      c. wx.navigateTo({})  保留当前页面，跳转到应用内的某个页面。但是不能跳到tabbar页面。使用wx.navigateBack可以返回到原页面。跳转页面后左上角出现返回按钮，点击可以返回
+         (1)url: String：必填，需要跳转的应用内非 tabBar 的页面的路径 (代码包路径), 路径后可以带参数。
+            注：参数与路径之间使用 ? 分隔，参数键与参数值用 = 相连，不同参数用 & 分隔。
+         (2)events: Object  页面间通信接口，用于监听被打开页面发送到当前页面的数据。基础库 2.7.3 开始支持。
+         (3)success: Function：接口调用成功的回调函数
+         (4)fail: Function：接口调用失败的回调函数
+         (5)complete: Function：接口调用结束的回调函数（调用成功、失败都会执行）
+         注：调用 navigateTo 跳转时，调用该方法的页面会被加入堆栈，而 redirectTo 方法则不会
+      d. wx.navigateBack({})  关闭当前页面，返回上一页面或多级页面。可通过 getCurrentPages 获取当前的页面栈，决定需要返回几层
+         (1)delta: Number：默认为1，返回的页面数，如果 delta 大于现有页面数，则返回到首页。
+         (2)success: Function：接口调用成功的回调函数
+         (3)fail: Function：接口调用失败的回调函数
+         (4)complete: Function：接口调用结束的回调函数（调用成功、失败都会执行）
+      e. wx.reLaunch({})  关闭所有页面，打开到应用内的某个页面(包括tabbar页面)
+         (1)url: String：必填，需要跳转的应用内非 tabBar 的页面的路径 (代码包路径), 路径后可以带参数。
+            注：参数与路径之间使用 ? 分隔，参数键与参数值用 = 相连，不同参数用 & 分隔。
+         (2)success: Function：接口调用成功的回调函数
+         (3)fail: Function：接口调用失败的回调函数
+         (4)complete: Function：接口调用结束的回调函数（调用成功、失败都会执行）
+      f. <navigator url="/page/index/index" open-type="switchTab"><button>首页</button></navigator>  页面链接
+         (1)target: string(默认self) 在哪个目标上发生跳转，默认当前小程序 (self当前小程序,miniProgram其他小程序)
+         (2)url: String  当前小程序内的跳转链接
+         (3)open-type: string	 跳转方式 (switchTab,redirect,navigate,navigateBack,reLaunch,exit(target="miniProgram"时生效))
+         (4)delta: number(默认为1) 当open-type 为 'navigateBack' 时有效，表示回退的层数
+         (5)app-id: string	当target="miniProgram"时有效，要打开的小程序的appId
+   7. 模块化：在一个文件夹内(utils)的文件内(util)定义属性和方法，并用module.exports暴露module.exports = {formatTime: formatTime}，在使用的地方引用var util = require('../../utils/util.js')
+   8. 指令：
+      a. 绑定点击事件：bindtap = "事件名" (冒泡) / catchtap = "事件名" (阻止冒泡,自己会执行，会阻止向其上层冒泡)
+         (1)事件名后不能加()
+         (2)传参：data-参数名="参数值"
+                 wxml中: <view data-id="3" data-text="aa" catchtap="toIndex">点击</view>
+                 js中: toIndex(e){
+                         console.log(e.target.dataset.id)
+                         console.log(e.target.dataset.text)
+                       }
+      b. 循环：<view wx:for="{{}}" wx:key="*this">{{index+1}}: {{item}}</view>
+              (1)直接使用index和item,也可自定义，如：<view wx:for="{{}}" wx:key="*this" wx:for-index="idx" wx:for-item="itemName">{{idx+1}}: {{itemName}}</view>
+              (2)wx:key 的值以两种形式提供:
+                字符串，代表在 for 循环的 array 中 item 的某个 property，该 property 的值需要是列表中唯一的字符串或数字，且不能动态改变。
+                保留关键字 *this 代表在 for 循环中的 item 本身，这种表示需要 item 本身是一个唯一的字符串或者数字。
+                当数据改变触发渲染层重新渲染的时候，会校正带有 key 的组件，框架会确保他们被重新排序，而不是重新创建，以确保使组件保持自身的状态，并且提高列表渲染时的效率。
+               (3)可以将 wx:for 用在<block/>标签上，以渲染一个包含多节点的结构块
+                  <block wx:for="{{[1, 2, 3]}}">
+                     <view> {{index}}: </view>
+                     <view> {{item}} </view>
+                  </block>
+                  注: <block/> 并不是一个组件，它仅仅是一个包装元素，不会在页面中做任何渲染，只接受控制属性。
+      c. 条件渲染：wx:if=""
+         (1)也可以用 wx:elif 和 wx:else 来添加一个 else 块
+            <view wx:if="{{length > 5}}"> 1 </view>
+            <view wx:elif="{{length > 2}}"> 2 </view>
+            <view wx:else> 3 </view>
+         (2)如果要一次性判断多个组件标签，可以使用一个 <block/> 标签将多个组件包装起来，并在上边使用 wx:if 控制属性
+            <block wx:if="{{true}}">
+               <view> view1 </view>
+               <view> view2 </view>
+            </block>
+   9. 模板：
+      (1)创建模板文件(如tpl.wxml),内容如下：
+         <template name="msgItem">
+            <view>
+               <text>{{index}}: {{msg}}</text>
+               <text>time: {{time}}</text>
+               <text wx:for="{{arr}}" wx:key="*this">
+                  {{index+1}}: {{item}}
+               </text>
+            </view>
+         </template>
+      注：模板也可以直接在页面的wxml中直接定义，然后直接使用，不用引入
+      (2)提供数据(在页面的js文件的data中定义)
+         data: {
+            item: {
+               index: 0,
+               msg: 'this is a template',
+               time: '2020-06-22',
+               arr: ['a', 'b', 'c']
+            }
+         }
+      (3)在页面的wxml中引入并使用
+         <import src="tpl.wxml" />
+         <template is="msgItem" data="{{...item}}" />  
+      注：数据也可以直接在引用的时候直接定义：data="{{index:0, msg:'sss', time:'2020-6-22'}}"
+   10. 样式：
+       a. 单位：rpx（responsive pixel） 可以根据屏幕宽度进行自适应。
+          (1)规定屏幕宽为750rpx。如在 iPhone6 上，屏幕宽度为375px，共有750个物理像素，则750rpx = 375px = 750物理像素，1rpx = 0.5px = 1物理像素。
+          (2)设计图上是多少就写多少rpx
+          (3)建议： 开发微信小程序时设计师可以用 iPhone6 作为视觉稿的标准。
+       b. 样式导入：使用@import语句可以导入外联样式表，@import后跟需要导入的外联样式表的相对路径，用;表示语句结束。
+          (1)样式导入是在一个wxss文件中导入另一个wxss文件中的样式内容(wxml中不用做样式引入)
+       c. 内联样式：架组件上支持使用 style、class 属性来控制组件的样式
+          (1)<view style="color:{{color}};" />
+          (2)<view class="normal_view" />
+          注：style：静态的样式统一写到 class 中。style 接收动态的样式，在运行时会进行解析，请尽量避免将静态的样式写进 style 中，以免影响渲染速度。
+       d. 选择器：class(.list)、id(#com)、element(text) 、element element(view text)、:after(view::after)、::before(view::before)
+       e. 定义在 app.wxss 中的样式为全局样式，作用于每一个页面。在 page 的 wxss 文件中定义的样式为局部样式，只作用在对应的页面，并会覆盖 app.wxss 中相同的选择器。
+          

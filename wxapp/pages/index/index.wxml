@@ -1,0 +1,13 @@
+<!--index.wxml-->
+<view class="container">
+  <text>{{title}}</text>
+</view>
+<view>
+  <button bindtap="handleClick">点击</button>
+</view>
+<view>
+  <button bindtap="toAbout">关于</button>
+</view>
+<view>
+  <button bindtap="toMy">我的</button>
+</view>

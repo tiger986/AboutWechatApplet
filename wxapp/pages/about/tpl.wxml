@@ -1,0 +1,10 @@
+<template name="tplData">
+  <view>
+    <text>
+      {{msg}}
+    </text>
+    <view wx:for="{{arr}}" wx:key="*this">
+      {{index+1}}: {{item}}
+    </view>
+  </view>
+</template>
