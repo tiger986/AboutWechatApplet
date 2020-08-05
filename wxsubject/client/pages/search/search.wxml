@@ -1,0 +1,15 @@
+<view class='searchCon'>
+  <view>
+    <view>
+      <input bindinput='bindKeywords' placeholder='请输入关键字' />
+    </view>
+    <view>搜索</view>
+  </view>
+
+  <scroll-view scroll-y>
+    <view class='list' wx:for="{{list}}" wx:key='*this'>
+      <view>{{item.text}}</view>
+      <view>{{item.info}}</view>
+    </view>
+  </scroll-view>
+</view>

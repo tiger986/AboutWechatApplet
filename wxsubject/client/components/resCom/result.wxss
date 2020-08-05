@@ -1,0 +1,15 @@
+.success{
+  height: 100%;
+}
+.succBox{
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.ico{
+  margin-right: 30rpx;
+}
+.button{
+  padding: 40rpx 20rpx;
+}

@@ -1,0 +1,29 @@
+<view class='detailCon'>
+  <view class='item'>
+    <view class='label'>我的地址</view>
+    <view class='info'>
+      {{detailInfo.address}}
+    </view>
+  </view>
+
+  <view class='item'>
+    <view class='label'>类型</view>
+    <view class='info'>
+      {{detailInfo.type == 1 ? '求购' : '出售'}}
+    </view>
+  </view>
+
+  <view class='item'>
+    <view class='label'>说明</view>
+    <view class='info'>
+      {{detailInfo.info}}
+    </view>
+  </view>
+
+  <view class='item'>
+    <view class='label'>联系方式</view>
+    <view class='info'>
+      {{detailInfo.tel}}
+    </view>
+  </view>
+</view>

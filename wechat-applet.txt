@@ -11,7 +11,7 @@
       注意：a. pages文件夹的名称可以自定义，一般都用pages命名
            b. pages文件夹里的页面文件夹是自定义命名
            c. 页面文件夹里的页面相关文件是自定义命名，但本文件夹中所有文件名必须相同，只是扩展名不同         
-   2. utils文件夹：
+   2. utils文件夹
    3. app.js：此文件名不可改，存放小程序全局逻辑
    4. app.json：此文件名不可改，存放小程序全局配置
    5. app.wxss：此文件名不可改，存放小程序全局样式
@@ -60,11 +60,13 @@
       e. onPageNotFound(res){wx.redirectTo({url: 'pages/...'})}  小程序要打开的页面不存在时触发(监听函数)
       f. 自定义全局属性，如：globalData: "aaa"  (在此js中可以访问:this.globalData，在页面js中也可以访问:const app=getApp(); app.globalData)
       g. 自定义全局方法，如：globalFun(){}  (在此js中可以调用:this.globalFun()，在页面js中也可以访问:const app=getApp(); app.globalFun())
-      h. 其他内容见官方文档
+      h. data: {}：小程序的初始数据,如data: {title: 'abc'}  (在此js中可以调用:this.data.title，在页面js中也可以访问:const app=getApp(); app.data.title)
+      i. 其他内容见官方文档
    5. 注册页面(在页面.js中)：Page({}),固定写法,接受一个Object类型参数(必填)，其指定页面的初始数据、生命周期回调、事件处理函数等。
       a. data: {}：页面的初始数据,如data: {title: 'abc'}
          (1)访问：this.data.title,在页面中显示则在wxml中用插值表达式访问
          (2)修改：this.setData({title: 'eee'})
+         注：和vue一样，不需要在页面中使用的数据通常不设置成响应式数据(不在data中定义),直接用this.数据名来访问和修改,但如果其需要初始值则要进行设置。
       b. onLoad: function(options) {Do something}  页面加载时触发(生命周期回调)
       c. onShow: function() {Do something}   页面显示时触发(生命周期回调)
       d. onReady: function() {Do something}   页面初次渲染完成时触发(生命周期回调)
@@ -94,7 +96,7 @@
          (4)complete: Function：接口调用结束的回调函数（调用成功、失败都会执行）
       c. wx.navigateTo({})  保留当前页面，跳转到应用内的某个页面。但是不能跳到tabbar页面。使用wx.navigateBack可以返回到原页面。跳转页面后左上角出现返回按钮，点击可以返回
          (1)url: String：必填，需要跳转的应用内非 tabBar 的页面的路径 (代码包路径), 路径后可以带参数。
-            注：参数与路径之间使用 ? 分隔，参数键与参数值用 = 相连，不同参数用 & 分隔。
+            注：参数与路径之间使用 ? 分隔，参数键与参数值用 = 相连，不同参数用 & 分隔。(参数可以在目标页面通过onLoad(options){console.log(options)}拿到)
          (2)events: Object  页面间通信接口，用于监听被打开页面发送到当前页面的数据。基础库 2.7.3 开始支持。
          (3)success: Function：接口调用成功的回调函数
          (4)fail: Function：接口调用失败的回调函数
@@ -187,4 +189,216 @@
           注：style：静态的样式统一写到 class 中。style 接收动态的样式，在运行时会进行解析，请尽量避免将静态的样式写进 style 中，以免影响渲染速度。
        d. 选择器：class(.list)、id(#com)、element(text) 、element element(view text)、:after(view::after)、::before(view::before)
        e. 定义在 app.wxss 中的样式为全局样式，作用于每一个页面。在 page 的 wxss 文件中定义的样式为局部样式，只作用在对应的页面，并会覆盖 app.wxss 中相同的选择器。
-          
+   11. 组件：
+       a. radio(单选框)：
+          wxml:
+          <radio-group class='radio-group' bindchange='bindTypeChange'>
+            <label>
+               <radio value='buy' checked /> 求购
+            </label>
+            <label class='label-sell'>
+               <radio value='sell' /> 转让
+            </label>
+         </radio-group>
+         js:
+         bindTypeChange(e){ //radio切换时触发
+            console.log(e.detail.value)
+         }
+       b. icon(图标)：
+          <icon type='success' size='40' /> 恭喜你，数据提交成功~
+       c. input(输入框):
+          wxml:
+          <input placeholder='请输入说明' bindinput='bindInfoInput'></input>
+          js:
+          bindInfoInput(e){ //input输入时触发
+            console.log(e.detail.value);
+          }
+       d. <scroll-view scroll-y></scroll-view>(滚动区):
+          (1)在组件标签中设定横向滚动或竖向滚动
+          (2)在对应的样式中设置固定宽或高，并设置overflow: hidden;
+          (3)监听函数见相应文档
+      12. 自定义组件(component构造器)
+          a. 方法：
+             (1)在根目录创建文件夹并在其中创建component相关文件(.wxml、.wxss、.js、.json)
+             (2)编写组件的结构、样式及js
+             (3)配置json:
+                {
+                  "component": true,  //使用
+                  "usingComponents": {} //该组件内使用其他的组件
+                }
+             (4)在使用该组件的json中配置：
+                {
+                  "navigationBarTitleText": "发布",
+                  "usingComponents": {  //使用组件
+                     "result": "/components/resCom/result" //使用组件的自定义名称及路径
+                  }
+                }
+             (5)在页面中使用：<result></result>
+          b. 向组件传参：
+             (1)在组件js中定义参数：
+                Component({
+                  properties: { 
+                     submittedChild: Boolean  //需要传入组件的参数及类型
+                  },
+                  data: {
+                     btnText: '返回'
+                  },
+                  methods: {},
+                  //生命周期函数，当组件实例载入页面节点时触发
+                  attached(){}
+                })
+             (2)在组件内使用：<view class='success' wx:if="{{submittedChild}}">{{btnText}}</view>
+             (3)在页面或父组件中使用组件的地方传参：<result submittedChild="{{submittedParent}}"></result>
+          c. 使用插槽(slot):
+             (1)在使用组件的地方写插槽内容(slot='')：(如果插槽内容需要样式，则样式应写本页面的wxss中，小程序中结构写在哪，样式就写在对应的wxss中)
+                <result submitted="{{submitted}}" wx:if="{{subSucc}}">
+                  <icon type='success' size='40' class='ico' slot='info' />
+                  <text slot='info'>恭喜你，数据提交成功~</text>
+                  <button type='primary' slot='btn'>返回</button>
+               </result>
+               <result submitted="{{submitted}}" wx:if="{{!subSucc}}">
+                  <icon type='warn' size='40' class='ico' slot='info' />
+                  <text slot='info'>对不起，数据提交失败了~</text>
+                  <button type='warn' slot='btn'>重新提交</button>
+               </result>
+             (2)在组件内使用插槽(<slot name=''></slot>)：
+                <view class='success' wx:if="{{submitted}}">
+                  <view class='succBox'>
+                     <slot name='icon'></slot>
+                     <slot name='info'></slot>
+                  </view>
+                  <view class='button' bindtap='bindBackTap'>
+                     <slot name='btn'></slot>
+                  </view>
+                </view>
+             (3)在组件的js中启用插槽支持：
+                options: {
+                  multipleSlots: true  //启用多slot支持
+                }
+          d. 在子组件触发父组件事件
+             (1)在父组件使用子组件的标签上定义一个属性，属性名必须以bind开头(bind+属性名),属性的值为父组件中要被触发的事件名(事件名不加{{}})
+             (2)在子组件中触发一个事件，事件内容为this.triggerEvent('父组件中定义的属性名(去掉bind)')
+                注：如果要传参则在事件内容处传参：this.triggerEvent('父组件中定义的属性名(去掉bind)', {id: 2, name: 'gao'}) （参数必须写在{}中传入）
+                   这样在父组件的事件中就可以拿到参数：e.detail  (e.detail的值是一个{},传入的参数就是它的属性，e.detail.id)
+             (3)例子代码：
+                父组件：(定义事件并用属性传入子组件，注意属性名前要加bind)
+                <result bindback="bindBackTap"></result>
+                bindBackTap(e){
+                  console.log(e.detail);
+                  //do something
+                }
+                子组件：(触发事件，注意触发事件的名为父组件传来的属性名，去掉bind，如果要传参则以对象的形式传，在父组件的事件中用e.detail来获取参数)
+                methods: {
+                  bindBackTap(){
+                     //this.triggerEvent('back');
+                     this.triggerEvent('back', {id:2, num:3});
+                  }
+                }
+                注：自定义组件的事件是要写在methods:{}中的，但要注意小程序页面的事件是不写在methods里的，注册页面的js中没有methods
+
+      13. 常用方法：
+          a. wx.request() 发起 HTTPS 网络请求
+             wx.request({
+               method: 'POST',
+               url: '',
+               data: {},
+               header: {
+                  'content-type': 'application/json' // 默认值 
+                  //'content-type': 'application/x-www-form-urlencoded'
+               },
+               success: (res) => {
+                  console.log(res.data);
+               },
+               fail: () => {}
+             })
+          b. wx.getSystemInfoSync()  获取当前设备信息，如：
+             getWindowInfo(){
+               try{
+                  var res = wx.getSystemInfoSync();
+                  return res;
+               }catch(e){
+                  console.log(e);
+               }
+             }
+          c. wx.chooseLocation() 打开地图选择位置, 如：
+             bindChooseAddrTap(){
+               wx.chooseLocation({
+                  success: (res) => {
+                     this.setData({
+                        address: res.address
+                     });
+                     this.staticData.longitude = res.longitude;
+                     this.staticData.latitude = res.latitude;
+                     //console.log(res);
+                  },
+                  fail: function(){
+                     //接口调用失败的回调函数
+                  },
+                  complete: function(){
+                     //接口调用结束的回调函数（调用成功、失败都会执行）
+                  }
+               })
+             }
+      14. 地图组件 (<map></map>)，如：
+          <map 
+            id="map" 
+            scale='16' 
+            show-location
+            longitude="{{longitude}}" 
+            latitude="{{latitude}}"
+            controls="{{controls}}"
+            bindcontroltap="controltap"
+            markers='{{markers}}'
+            bindmarkertap='markertap'
+         ></map>
+         a. id: map组件的id
+         b. scale: Number 缩放级别，取值范围为3-20 (默认为16)
+         c. show-location: Boolean 显示带有方向的当前定位点
+         d. longitude: Number 中心点经度 (必填)
+         e. latitude: Number 中心点纬度 (必填)
+         f. controls: [{}] 控件（即将废弃，建议使用 cover-view 代替）
+                controls: [{
+                  id: 1,
+                  iconPath: '/resources/location.png',
+                  position: {
+                     left: app.getWindowInfo().windowWidth / 2 - 12,
+                     top: app.getWindowInfo().windowHeight / 2 -55,
+                     width: 22,
+                     height: 31
+                  },
+                  clickable: false
+                },
+                {
+                  id: 1,
+                  iconPath: '/resources/center.png',
+                  position: {
+                     left: 18,
+                     top: app.getWindowInfo().windowHeight - 110,
+                     width: 30,
+                     height: 30
+                  },
+                  clickable: true
+                }]
+         g. markers: [{}] 标记点
+            markers: [{
+               iconPath: '/resources/buy.png',
+               id: 1,
+               longitude: 114.467766,
+               latitude: 38.04691,
+               width: 30,
+               height: 30
+            },
+            {
+               iconPath: '/resources/sell.png',
+               id: 2,
+               longitude: 114.473553,
+               latitude: 38.030435,
+               width: 30,
+               height: 30
+            }]
+         h. bindcontroltap: Function 点击控件时触发(clickable设为true的控件) (通过e可拿到点击的控件的id)
+         i. bindmarkertap: Function 点击标记点时触发 (通过e可拿到点击的标记点的id)
+
+
+五、框架
+   1、wepy

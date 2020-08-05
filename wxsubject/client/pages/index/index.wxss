@@ -1,0 +1,34 @@
+.indexCon{
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.map{
+  flex: 1;
+}
+#map{
+  width: 100%;
+  height: 100%;
+}
+.tabbar{
+  height: 44px;
+  display: flex;
+}
+.tabbar navigator{
+  flex: 1;
+}
+.tabbar view{
+  width: 100%;
+  height: 100%;
+  font-size: 32rpx;
+  text-align: center;
+  line-height: 44px;
+  font-weight: 100;
+  color: white;
+}
+.publish{
+  background-color: #ff9700;
+}
+.search{
+  background-color: #03bbd5;
+}

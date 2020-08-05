@@ -1,0 +1,9 @@
+<view class='success' wx:if="{{submitted}}">
+  <view class='succBox'>
+    <slot name='icon'></slot>
+    <slot name='info'></slot>
+  </view>
+  <view class='button' bindtap='bindBackTap'>
+    <slot name='btn'></slot>
+  </view>
+</view>

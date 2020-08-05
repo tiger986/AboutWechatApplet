@@ -1,0 +1,23 @@
+<view class="indexCon">
+  <view class="map">
+    <map 
+      id="map" 
+      scale='16' 
+      show-location
+      longitude="{{longitude}}" 
+      latitude="{{latitude}}"
+      controls="{{controls}}"
+      bindcontroltap="controltap"
+      markers='{{markers}}'
+      bindmarkertap='markertap'
+    ></map>
+  </view>
+  <view class="tabbar">
+    <navigator url="/pages/publish/publish" open-type="navigate">
+      <view class="publish">发布</view>
+    </navigator> 
+    <navigator url="/pages/search/search" open-type="navigate">  
+      <view class='search'>搜索</view>
+     </navigator>   
+  </view>
+</view>
